@@ -100,7 +100,7 @@ class PhplistList
      */
     public function doPrePersist()
     {
-        $this->modified = new DateTime();
+        $this->modified = new \DateTime();
     }
 
     public function __construct()
