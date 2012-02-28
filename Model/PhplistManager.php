@@ -173,7 +173,6 @@ class PhplistManager
         fclose($handle);
 
         $output = null;
-        echo "php {$this->getPhplistPath()} -psend -s $subject -l {$list->getName()} -f {$this->getServerFrom()} < $filename" . "\n";
         $resultExec = exec("php {$this->getPhplistPath()} -psend -s $subject -l {$list->getName()} -f {$this->getServerFrom()} < $filename", $output);
         return $output;
     }
@@ -194,7 +193,7 @@ class PhplistManager
         $query = $this->em->createQuery('SELECT m.id AS messageId, COUNT(u.viewed) AS views, COUNT(u.status) AS total,
             m.subject, m.sent, m.bounceCount AS bounceCount, (COUNT(u.viewed) / COUNT(u.status) * 100) AS rate
             FROM IdeupPhplistBundle:PhplistUserMessage u JOIN u.message m
-            GROUP BY m.id
+            GROUP BY m.subject
             ORDER BY m.entered');
         return $query->getResult();
     }
