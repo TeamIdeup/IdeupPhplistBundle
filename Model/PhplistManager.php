@@ -193,8 +193,8 @@ class PhplistManager
         $query = $this->em->createQuery('SELECT m.id AS messageId, COUNT(u.viewed) AS views, COUNT(u.status) AS total,
             m.subject, m.sent, m.bounceCount AS bounceCount, (COUNT(u.viewed) / COUNT(u.status) * 100) AS rate
             FROM IdeupPhplistBundle:PhplistUserMessage u JOIN u.message m
-            GROUP BY m.subject
-            ORDER BY m.entered');
+            GROUP BY m.entered
+            ORDER BY m.sent DESC');
         return $query->getResult();
     }
 }
