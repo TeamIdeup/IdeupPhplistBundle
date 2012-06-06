@@ -49,6 +49,13 @@ class PhplistUserMessage
     protected $status;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", name="newsletter_id", nullable="true")
+     */
+    protected $newsletterId;
+
+    /**
      * Get message
      *
      * @return Ideup\PhplistBundle\Entity\PhplistMessage

@@ -7,6 +7,7 @@ use Ideup\PhplistBundle\Entity\PhplistList;
 use Ideup\PhplistBundle\Entity\PhplistUserUser;
 use Ideup\PhplistBundle\Entity\PhplistUserMessage;
 use Ideup\PhplistBundle\Entity\PhplistMessage;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class PhplistManager
 {
@@ -190,11 +191,69 @@ class PhplistManager
      */
     public function getMailingStatistics()
     {
-        $query = $this->em->createQuery('SELECT m.id AS messageId, COUNT(u.viewed) AS views, COUNT(u.status) AS total,
-            m.subject, m.sent, m.bounceCount AS bounceCount, (COUNT(u.viewed) / COUNT(u.status) * 100) AS rate
-            FROM IdeupPhplistBundle:PhplistUserMessage u JOIN u.message m
+        $query = $this->em->createQuery('
+            SELECT
+                m.id AS messageId, COUNT(u.viewed) AS views, COUNT(u.status) AS total,
+                m.subject, m.sent, m.bounceCount AS bounceCount, (COUNT(u.viewed) / COUNT(u.status) * 100) AS rate
+            FROM
+                IdeupPhplistBundle:PhplistUserMessage u
+            JOIN
+                u.message m
             GROUP BY m.entered
-            ORDER BY m.sent DESC');
+            ORDER BY m.sent DESC
+        ');
         return $query->getResult();
+    }
+
+    /**
+     * Parses output looking for sent messages' ids
+     *
+     * @param array $output
+     * @return array $ids
+     */
+    public function parseMessageIds(array $output)
+    {
+        $key = "message";
+        $ids = array();
+
+        foreach ($output as $item) {
+            $pos = strpos($item, $key);
+
+            if (false === $pos) {
+                continue;
+            }
+
+            $ids[] = (int)substr($item, $pos + strlen($key));
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Adds to each user message the corresponding newsletter id after processing
+     *
+     * @param array $ids
+     * @return array
+     */
+    public function updateNewsletterIds(array $ids)
+    {
+        $newsletterId = sha1(uniqid("", true));
+        $conn = $this->em->getConnection();
+        $sql = "";
+
+        foreach ($ids as $id) {
+            $sql .= "
+                UPDATE
+                    phplist_usermessage um
+                SET
+                    um.newsletter_id = '".$newsletterId."'
+                WHERE
+                    um.messageid = $id;
+            ";
+        }
+
+        $rows = $conn->executeUpdate($sql);
+
+        return $rows;
     }
 }
