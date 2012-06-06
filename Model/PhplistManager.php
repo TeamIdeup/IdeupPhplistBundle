@@ -199,7 +199,7 @@ class PhplistManager
                 IdeupPhplistBundle:PhplistUserMessage u
             JOIN
                 u.message m
-            GROUP BY m.entered
+            GROUP BY u.newsletterId
             ORDER BY m.sent DESC
         ');
         return $query->getResult();
