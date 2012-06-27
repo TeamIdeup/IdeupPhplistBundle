@@ -1,0 +1,43 @@
+{
+    "name":         "ideup/phplist-bundle",
+    "description":  "Provides easy management of PHPList",
+    "keywords":     ["message", "phplist", "symfony2", "bundle"],
+    "homepage":     "https://github.com/TeamIdeup/IdeupPhplistBundle",
+    "type":         "symfony-bundle",
+    "license":      "GNU",
+    "authors":      [
+        {
+            "name":     "Ideup",
+            "homepage": "http://ideup.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "php/phplist",
+                "version": "2.10.14",
+                "dist": {
+                    "url": "http://sourceforge.net/projects/phplist/files/phplist/2.10.14/phplist-2.10.14.tgz",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "http://sourceforge.net/",
+                    "type": "zip",
+                    "reference": "phplist"
+                },
+                "autoload": {
+                    "psr-0": ["phplist"]
+                }
+            }
+        }
+    ],
+    "require":      {
+        "php":              ">=5.3.0",
+        "symfony/symfony":  ">=2.0",
+    },
+    "autoload":     {
+        "psr-0": { "Ideup\\PhplistBundle": "" }
+    },
+    "target-dir": "Ideup/PhplistBundle"
+}
